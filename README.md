@@ -1,3 +1,5 @@
-# Create T3 App
+# Peter McCrae Hokenson
 
-This is an app bootstrapped according to the [init.tips](https://init.tips) stack, also known as the T3-Stack.
+This is a collection of my design and development work.
+
+![READMEPreview](https://user-images.githubusercontent.com/11333770/178775646-bef7cc04-6371-4348-b45f-6d56e3d8b4ea.png)
