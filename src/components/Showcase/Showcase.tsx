@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { fadeIn } from '../../shared/animation';
-import GameTheoryLogo from '../../../public/assets/GT_Logo.png';
-import QuickTakeLogo from '../../../public/assets/QuickTake_Logo.png';
 import { Button } from '@chakra-ui/react';
+import { useOutsideClick } from '@chakra-ui/react';
 
 interface ShowcaseProps {
   title: string;
@@ -47,12 +46,23 @@ const mockData = [
 ];
 
 export default function Showcase({ title, id }: ShowcaseProps) {
+  //State
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [activeShowcase, setActiveShowcase] = useState<any>(null);
 
-  //Parse the id from the data and minus 1 to get the index
+  //Refs
+  const ref = React.useRef<any>();
+
+  //Hooks
+  useOutsideClick({
+    ref: ref,
+    handler: () => setSelectedId(null),
+  });
+
+  //Effects
   useEffect(() => {
     if (selectedId) {
+      //Parse the id from the data and minus 1 to get the index
       setActiveShowcase(mockData[parseInt(selectedId) - 1]);
       console.log(activeShowcase);
     }
@@ -71,6 +81,10 @@ export default function Showcase({ title, id }: ShowcaseProps) {
               }}
               key={index}
               className={`${item.colors.background} ${item.colors.text} rounded-2xl shadow-lg px-8 pt-10 pb-20 cursor-pointer`}
+              variants={fadeIn}
+              initial="initial"
+              animate="animate"
+              exit="exit"
             >
               <motion.img
                 src={item.logo}
@@ -82,6 +96,7 @@ export default function Showcase({ title, id }: ShowcaseProps) {
             </motion.div>
           ))}
         </div>
+        {/* Expanded view of the project showcase */}
         <AnimatePresence>
           {selectedId && (
             <motion.div
@@ -94,34 +109,42 @@ export default function Showcase({ title, id }: ShowcaseProps) {
               <div className="flex justify-center items-center w-full h-full">
                 <motion.div
                   layoutId={selectedId}
-                  className={`${activeShowcase?.colors.background} ${activeShowcase?.colors.text} rounded-lg shadow-xl p-12 relative w-2/4 `}
+                  className={`${activeShowcase?.colors.background} ${activeShowcase?.colors.text} rounded-lg shadow-xl p-10 relative w-2/4 z-50`}
+                  variants={fadeIn}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                  ref={ref}
                 >
                   <motion.button
                     onClick={() => setSelectedId(null)}
-                    className="font-bold py-2 px-4 hover:bg-gray-300 rounded-md absolute top-4 right-4"
+                    className="font-bold py-2 px-4 hover:bg-gray-800/20 rounded-md absolute top-4 right-4"
                   >
                     X
                   </motion.button>
                   <motion.img
                     src={activeShowcase?.logo}
                     alt={activeShowcase?.title}
-                    className="h-10 my-4 "
+                    className="h-10 my-4"
+                    variants={fadeIn}
                   />
-                  <motion.p className="my-10">
-                    {activeShowcase?.descriptionLong}
+                  <motion.p className="my-10" variants={fadeIn}>
+                    {activeShowcase?.description}
                   </motion.p>
                   <motion.img
                     src={activeShowcase?.preview}
                     className="w-4/5 mx-auto my-8"
+                    variants={fadeIn}
                   />
-                  <a href={activeShowcase?.url}>
+                  <motion.a href={activeShowcase?.url}>
                     <motion.button
                       className={`${activeShowcase?.colors.primary} text-white rounded-lg py-2 w-full font-medium  `}
                       whileTap={{ scale: 0.95 }}
+                      variants={fadeIn}
                     >
                       Check out the project
                     </motion.button>
-                  </a>
+                  </motion.a>
                 </motion.div>
               </div>
             </motion.div>
